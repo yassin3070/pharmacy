@@ -29,7 +29,7 @@
 		<meta name="twitter:creator" content="@HWZN" />
 		<meta name="twitter:url" content="{{ Request::fullUrl() }}" />
 
-		
+
 		<link href="https://fonts.googleapis.com/css2?family=Changa:wght@200;400&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
 		<link href="{{asset('dashboard/custom/css/main.css')}}" rel="stylesheet"/>
@@ -54,8 +54,8 @@
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
-	
-    
+
+
 	<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed aside-enabled aside-fixed" style="--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px">
 	<div class="d-flex flex-column flex-root">
 		<!--begin::Page-->
@@ -101,17 +101,17 @@
 				<!--begin::Header-->
 			   @include('dashboard.layouts.header')
 				<!--end::Header-->
-   
+
                 @yield('content')
 
-				
+
 				@include('dashboard.layouts.footer')
 			</div>
 			<!--end::Wrapper-->
 		</div>
 		<!--end::Page-->
 	</div>
-	
+
 
 	<script>var hostUrl = "assets/";</script>
 	<!--begin::Global Javascript Bundle(used by all pages)-->
@@ -141,13 +141,13 @@
 	<!--end::Page Custom Javascript-->
     @yield('scripts')
 
-	
+
 	<script src="https://www.gstatic.com/firebasejs/7.23.0/firebase.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-auth.js"></script>
-	
-	
+
+
 	<script>
-	
+
 	$(document).ready(function() {
 		//  initFirebaseMessagingRegistration();
 	});
@@ -163,8 +163,8 @@
 		};
 		firebase.initializeApp(firebaseConfig);
 			const messaging = firebase.messaging();
-	   
-	
+
+
 		function initFirebaseMessagingRegistration() {
 			messaging
 				.requestPermission()
@@ -190,11 +190,11 @@
 						error: function (error) {
 						},
 					});
-	
+
 				}).catch(function (error) {
 				});
 		}
-	
+
 		   messaging.onMessage(function(payload) {
 			const noteTitle = payload.data.title_ar;
 			const noteOptions = {
@@ -202,13 +202,13 @@
 				icon: payload.data.icon,
 				requireInteraction: true,
 			};
-		
+
 			new Notification(noteTitle, noteOptions);
-		 
+
 		});
-	   
-	
-	</script>	
+
+
+	</script>
 
 </body>
 <!--end::Body-->

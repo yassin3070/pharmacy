@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('image')->nullable();
             $table->string('qrcode')->nullable();
+            $table->string('decoded_qrcode')->nullable();
             $table->text('desc')->nullable();
             $table->float('price')->nullable();
             $table->foreignId('category_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();

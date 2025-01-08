@@ -31,6 +31,7 @@ class CreateUpdateProductRequest extends FormRequest
                 'desc.ar'         => 'required|string',
                 'desc.en'         => 'required|string',
                 'image'           => 'nullable',
+                'qrcode'          => 'nullable',
                 // 'order'           => 'required|numeric|unique:table_name,order,'.$this->id,
                 'is_active'       => 'required',
                 'price'           => 'required|numeric',

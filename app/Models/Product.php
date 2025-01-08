@@ -15,7 +15,7 @@ class Product extends Model
     const IMAGEPATH = 'products' ;
     public $translatable = ['name' , 'desc'];
 
-    protected $fillable = ['name' , 'image' , 'desc' , 'is_active','category_id','price','need_recipe','qrcode'];
+    protected $fillable = ['name' , 'image' , 'desc' , 'is_active','category_id','price','need_recipe','qrcode','decoded_qrcode'];
 
 
     protected function asJson($value)
@@ -40,6 +40,19 @@ class Product extends Model
     {
         if($value)
         return Storage::disk(env('FILESYSTEM_DRIVER'))->url($value);
+    }
+
+    public function setQrcodeAttribute($value)
+    {
+        if($value){
+            return $this->attributes['qrcode'] = $this->StoreFile(static::IMAGEPATH, $value);
+        }
+    }
+
+    public function getQrcodeAttribute($value)
+    {
+        if($value)
+            return Storage::disk(env('FILESYSTEM_DRIVER'))->url($value);
     }
 
 

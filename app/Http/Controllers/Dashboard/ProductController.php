@@ -7,6 +7,8 @@ use App\Models\Category;
 use App\Repositories\IProductRepository;
 use App\Requests\dashboard\CreateUpdateProductRequest;
 use Illuminate\Http\Request;
+use Yoeunes\Toastr\Facades\Toastr;
+use Zxing\QrReader;
 
 class ProductController extends Controller
 {
@@ -47,8 +49,20 @@ class ProductController extends Controller
 
     public function update(CreateUpdateProductRequest $request , $id)
     {
+        $validated = $request->validated();
+        $qrReader = new QrReader($request->file('qrcode'));
+        $decodedQrContent = $qrReader->text();
+        if (!$decodedQrContent) {
+            return response()->json([
+                'errors' => [
+                    'qrcode' => ['Invalid QRCode']
+                ]
+            ], 422);
+        }
+        $validated['decoded_qrcode'] = $decodedQrContent;
         $product = $this->productRepository->findOne($id);
-        $product->update($request->validated());
+        $product->update($validated);
+
         if($request->need_recipe){
             $product->need_recipe = 1 ;
         }else{
