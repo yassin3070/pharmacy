@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('comment')->nullable();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('product_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('order_id')->nullable()->constrained()->cascadeOnDelete();
             $table->boolean('is_approved')->default(1);
             $table->timestamps();
         });

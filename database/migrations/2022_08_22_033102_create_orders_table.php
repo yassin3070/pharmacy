@@ -16,15 +16,19 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('order_num', 50); //order number dynamic
-            $table->string('title');
-            $table->text('desc');
-            $table->string('status')->default('pending'); //paid,provider_accept,preparing,done,cancelled,provider_reject
+//            $table->string('title');
+//            $table->text('desc');
+            $table->string('status')->default('pending');
             $table->string('payment_type')->nullable(); //cash ,online
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
-            $table->unsignedBigInteger('provider_id')->index()->nullable();
-            $table->foreign('provider_id')->references('id')->on('users')->onDelete('cascade');
-            $table->double('cost', 9, 2)->default(0);
-            $table->foreignId('category_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('address_id')->nullable()->constrained()->onDelete('cascade');
+            $table->dateTime('delivery_date')->nullable();
+            $table->double('total', 9, 2)->default(0);
+
+//            $table->unsignedBigInteger('provider_id')->index()->nullable();
+//            $table->foreign('provider_id')->references('id')->on('users')->onDelete('cascade');
+//            $table->foreignId('category_id')->nullable()->constrained()->onDelete('cascade');
 
             $table->timestamps();
         });

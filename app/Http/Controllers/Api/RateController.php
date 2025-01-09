@@ -45,7 +45,6 @@ class RateController extends Controller
         // Fetch the total count of rates with comments
         $this->data['comment_count'] = $ratesQuery->whereNotNull('comment')->count();
 
-        // Filter rates by branch_id and only include those with comments
         $ratesQuery = $ratesQuery->with('user')
                                  ->where('product_id', $request->input('product_id'))
                                  ->whereNotNull('comment');
@@ -69,21 +68,23 @@ class RateController extends Controller
      */
     public function store(RateProductRequest $request)
     {
+        $validated             = $request->validated() ;
+        $validated['user_id']  = auth()->id();
 
         $rate = $this->IrateRepository->findWhere([
             'product_id' => $request->product_id, 'user_id' => $request->user_id
         ]);
 
         if ($rate) {
-            $rate->update($request->validated());
+            $rate->update($validated);
         } else {
             // create the rate
-            $rate = $this->IrateRepository->create($request->validated());
+            $rate = $this->IrateRepository->create($validated);
         }
 
-        $rate->load('store.provider');
+//        $rate->load('store.provider');
         // notify  provider
-        $this->notifyRatedUser($rate, $rate->store?->provider);
+//        $this->notifyRatedUser($rate, $rate->store?->provider);
 
         $this->data['rate'] = new RateResource($rate);
         return $this->ApiResponse($this->data, __('apis.model_created', ['model' => __('dashboard.rate')]), 200);

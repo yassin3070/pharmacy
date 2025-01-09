@@ -16,8 +16,7 @@ class Rate extends Model
         'rate',
         'comment',
         'user_id',
-        'branch_id',
-        'order_id',
+        'product_id',
         'is_approved',
         'rateable_id',
         'rateable_type',
@@ -37,19 +36,10 @@ class Rate extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function branch(): BelongsTo
-    {
-        return $this->belongsTo(Branch::class, 'branch_id');
-    }
 
-    public function store(): HasOneThrough
+    public function product(): BelongsTo
     {
-        return $this->hasOneThrough(Store::class, Branch::class, 'id', 'id', 'branch_id', 'store_id');
-    }
-
-    public function order(): BelongsTo
-    {
-        return $this->belongsTo(Order::class, 'order_id');
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
     public function scopeApproved($query)

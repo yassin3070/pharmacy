@@ -17,13 +17,13 @@ class CategorySeeder extends Seeder
     {
         DB::table('categories')->insert([
             [
-                'name' => json_encode(['ar' => ' قسم أول ' , 'en' => 'First Category']) ,
+                'name' => json_encode(['ar' => ' الصحة ' , 'en' => 'Health']) ,
                 'desc' => json_encode(['ar' => ' قسم أول ' , 'en' => 'First Category']) ,
                 'image' => 'dashboard/assets/media/avatars/300-1.jpg' ,
                 'is_active' => 1
             ],
             [
-                'name' => json_encode(['ar' => ' قسم ثاني' , 'en' => 'Second Category']) ,
+                'name' => json_encode(['ar' => ' العناية' , 'en' => 'Care']) ,
                 'desc' => json_encode(['ar' => '  قسم ثاني' , 'en' => 'Second Category']) ,
                 'image' => 'dashboard/assets/media/avatars/300-1.jpg' ,
                 'is_active' => 1
@@ -32,6 +32,7 @@ class CategorySeeder extends Seeder
                 'name' => json_encode(['ar' => ' قسم ثالث' , 'en' => 'Third Category']) ,
                 'desc' => json_encode(['ar' => ' قسم ثالث' , 'en' => 'Third Category']) ,
                 'image' => 'dashboard/assets/media/avatars/300-1.jpg' ,
+//                'parent_id' => 1,
                 'is_active' => 1
             ]
             ]);

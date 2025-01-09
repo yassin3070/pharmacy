@@ -13,7 +13,15 @@ class Order extends Model
     protected $fillable = ['user_id' , 'title' , 'desc' , 'payment_type','category_id',
                            'status' , 'provider_id' , 'cost' , 'order_num'];
 
-   
+
+    const STATUSES = [
+        'in_cart'                 => 'in_cart',
+        'preparing'               => 'preparing',
+        'prepared'                => 'prepared',
+        'on_the_way'                => 'on_the_way',
+        'delivered'               => 'delivered',
+        'canceled'                => 'canceled',
+    ];
 
     public static function boot()
     {
@@ -64,6 +72,11 @@ class Order extends Model
        return $this->belongsTo(Category::class , 'category_id');
     }
 
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class , 'order_id');
+    }
+
 
     public function getStatusNameAttribute() {
         switch ($this->status) {
@@ -95,7 +108,7 @@ class Order extends Model
         }
     }
 
-  
+
 
     public function room()
     {

@@ -124,10 +124,20 @@ class HomeController extends Controller
         }
     }
 
-    public function categoryProducts($id)
+    public function categoryProducts(Request $request)
     {
-        $data = Product::where('category_id', $id)->get();
-        return $this->ApiResponse(ProductResource::collection($data), __('apis.fetched'), 200);
+        $filters = [
+            'category' => $request->input('category'),
+            'rating' => $request->input('rating'),
+            'min_price' => $request->input('min_price'),
+            'max_price' => $request->input('max_price'),
+        ];
+
+        $products = Product::query()
+            ->filterByOptions($filters)
+            ->orderByOption($request->sort_option)
+            ->get();
+        return $this->ApiResponse(ProductResource::collection($products), __('apis.fetched'), 200);
 
     }
 

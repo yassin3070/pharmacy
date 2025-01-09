@@ -47,15 +47,15 @@ class User extends Authenticatable
         'verfiy_token',
         'wallet_balance',
         'city_id',
-        'user_type', 
-        'bio', 
+        'user_type',
+        'bio',
         'experience',
         'university',
         'graduation_year',
         'qualification',
         'job'
 
-        
+
     ];
 
     /**
@@ -78,7 +78,7 @@ class User extends Authenticatable
     ];
 
 
-    
+
     public function isAdmin(){
         return $this->user_type === 1;
     }
@@ -90,7 +90,7 @@ class User extends Authenticatable
     public function isProvider(){
         return $this->user_type === 3;
     }
-    
+
     public function isActive(){
         return $this->is_active === 1;
     }
@@ -117,12 +117,12 @@ class User extends Authenticatable
             if (auth()->check() && auth()->user()->image && auth()->user()->image != asset('dashboard/logo/hwzn.png')) {
                 Storage::disk(env('FILESYSTEM_DRIVER'))->delete(auth()->user()->getRawOriginal('image'));
             }
-    
+
             // Store the new image and set the attribute
             $this->attributes['image'] = $this->StoreFile('users', $value);
         }
     }
-    
+
 
     public function getImageAttribute($value)
     {
@@ -205,14 +205,14 @@ class User extends Authenticatable
     //         // Invalid phone number or country code
     //     }
     // }
-    
+
     public function markAsPhoneActive()
     {
-        $this->update(['code' => null, 'code_expire' => null, 
+        $this->update(['code' => null, 'code_expire' => null,
                        'is_phone_verified' => true ,'verfiy_token' => null ]);
         return $this;
     }
-    
+
     public function markAsEmailActive()
     {
         $this->update(['code' => null, 'code_expire' => null,
@@ -237,7 +237,7 @@ class User extends Authenticatable
 
     public function sendVerificationMail()
     {
-      
+
         $this->update([
             'code'        => $this->activationCode(),
             'verfiy_token' => bin2hex(random_bytes(16)),
@@ -247,7 +247,7 @@ class User extends Authenticatable
         $msg = trans('apis.activeCode');
         $this->sendMail($this->email, $msg . $this->code);
         return ['user' => new UserResource($this->refresh())];
-   
+
     }
 
 
@@ -280,7 +280,7 @@ class User extends Authenticatable
         }
     }
 
-    
+
     public function categories()
     {
         return $this->hasMany(UserCategory::class);
@@ -323,17 +323,22 @@ class User extends Authenticatable
 
 
     //chat relations
-    public function rooms() 
+    public function rooms()
     {
         return $this->morphMany(RoomMember::class, 'memberable');
     }
-    
+
     public function ownRooms()
     {
         return $this->morphMany(Room::class, 'createable');
     }
-    
-    public function joinedRooms() 
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function joinedRooms()
     {
         return $this->morphMany(RoomMember::class, 'memberable')
                     ->with('room')
@@ -341,6 +346,12 @@ class User extends Authenticatable
                     ->pluck('room')
                     ->sortByDesc('last_message_id');
     }
-      
+
+
+
+    public function getCartAttribute()
+    {
+        return $this->orders()->where('status', Order::STATUSES['in_cart'])->first();
+    }
 
 }

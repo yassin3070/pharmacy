@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\{AddressController,
     DashboardController,
     HomeController,
     AuthController,
+    OrderController,
+    RateController,
     UserController,
     NotificationController,
     ChatController};
@@ -30,7 +32,7 @@ Route::group(['middleware' => ['api-cors', 'json.response', 'lang']], function (
     // Route::get('user-types', [AuthController::class, 'userTypes']);
     Route::post('register', [AuthController::class, 'register']);
     // Route::post('login', [AuthController::class, 'login']);
-     Route::post('send-code', [AuthController::class, 'OtpForPhoneOrMail']);
+//     Route::post('send-code', [AuthController::class, 'OtpForPhoneOrMail']);
     Route::post('send-code', [AuthController::class, 'OtpForPhone']);
     Route::post('activate-account', [AuthController::class, 'activateByGeneralCode']);
     Route::get('sms-counter', [HomeController::class, 'smsCounter']);
@@ -48,8 +50,21 @@ Route::group(['middleware' => ['api-cors', 'json.response', 'lang']], function (
     Route::group(['middleware' => ['auth:sanctum']], function () {
 
         //User Routes
-        Route::get('category-products/{id}', [HomeController::class, 'categoryProducts']);
+        Route::get('category-products', [HomeController::class, 'categoryProducts']);
 
+
+
+
+        /***************************** Orders Start *****************************/
+
+        Route::get('get-cart', [OrderController::class, 'getCart']);
+        Route::post('add-to-cart', [OrderController::class, 'addToCart']);
+        Route::post('add-item', [OrderController::class, 'addItem']);
+        Route::post('remove-item', [OrderController::class, 'removeItemFromOrder']);
+        Route::post('clear-cart', [OrderController::class, 'clearCart']);
+        Route::post('proceed-order', [OrderController::class, 'proceedOrder']);
+        Route::post('update-order-status', [OrderController::class, 'updateOrderStatus']);
+        /***************************** Orders End *****************************/
 
 
         /***************************** Address Start *****************************/
@@ -60,6 +75,11 @@ Route::group(['middleware' => ['api-cors', 'json.response', 'lang']], function (
         Route::delete('addresses/{address}', [AddressController::class, 'destroy']);
         /***************************** Address End *****************************/
 
+
+        /***************************** Rates Start *****************************/
+        Route::get('rates', [RateController::class, 'index']);
+        Route::post('rates', [RateController::class, 'store']);
+        /***************************** Rates End *****************************/
 
         // Profile Routes
         Route::post('change-lang', [UserController::class, 'changeLang']);

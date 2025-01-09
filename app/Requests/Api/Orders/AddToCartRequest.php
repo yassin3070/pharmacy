@@ -2,9 +2,11 @@
 
 namespace App\Requests\Api\Orders;
 
-use App\Requests\ApiMasterRequest;
+use App\Models\Order;
+use App\Models\User;
+use Illuminate\Foundation\Http\FormRequest;
 
-class RateProductRequest extends ApiMasterRequest
+class AddToCartRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,22 +21,23 @@ class RateProductRequest extends ApiMasterRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function rules()
     {
         return [
-//            'user_id'   => 'required|exists:users,id',
-            'rate'      => 'required|integer|min:1|max:5',
-            'comment'   => 'nullable|string|max:255',
-            'product_id'  => 'required|exists:products,id',
+
+            'quantity'                   => 'required|integer|min:1',
+            'product_id'                   => 'required|integer|min:1',
+
         ];
     }
 
     protected function prepareForValidation()
     {
         $this->merge([
-            'user_id' => user()->id,
+            'user_id'                    => user()->id,
+            'status'                     => Order::STATUSES['in_cart'],
         ]);
     }
 }

@@ -60,5 +60,63 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function rates()
+    {
+        return $this->hasMany(Rate::class);
+    }
+
+    public function scopeOrderByOption($query, $option)
+    {
+        switch ($option) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+
+            case 'rating_asc':
+                $query->withAvg('rates', 'rate')->orderBy('rates_avg_rate', 'asc');
+                break;
+
+            case 'rating_desc':
+                $query->withAvg('rates', 'rate')->orderBy('rates_avg_rate', 'desc');
+                break;
+
+            default:
+                $query->latest();
+                break;
+        }
+
+        return $query;
+    }
+
+    public function scopeFilterByOptions($query, $filters)
+    {
+        // Filter by category
+        if (!empty($filters['category'])) {
+            $query->where('category_id', $filters['category']);
+        }
+
+
+        // Filter by rating
+        if (!empty($filters['rating'])) {
+            // Join with a subquery to calculate the average rating
+            $query->whereIn('id', function ($subquery) use ($filters) {
+                $subquery->select('product_id')
+                    ->from('rates')
+                    ->groupBy('product_id')
+                    ->havingRaw('AVG(rate) >= ?', [$filters['rating']]);
+            });
+        }
+
+        // Filter by price range
+        if (!empty($filters['min_price']) && !empty($filters['max_price'])) {
+            $query->whereBetween('price', [$filters['min_price'], $filters['max_price']]);
+        }
+
+        return $query;
+    }
 
 }
