@@ -96,7 +96,7 @@
                         </select>
                             <!--end::Select2-->
                         </div>
-                       
+
                     </div>
                     <!--end::Card toolbar-->
                 </div>
@@ -164,7 +164,7 @@
                                             <!--end::Checkbox-->
                                             <!--begin::Order ID=-->
                                             <td data-kt-ecommerce-order-filter="order_id">
-                                                <a href="{{ route('orders.show', $order->id) }}"
+                                                <a href="{{ route('orders.edit', $order->id) }}"
                                                     class="text-gray-800 text-hover-primary fw-bolder">{{ $order->order_num }}</a>
                                             </td>
                                             <!--end::Order ID=-->
@@ -235,7 +235,7 @@
                                                     data-kt-menu="true">
                                                     <!--begin::Menu item-->
                                                     <div class="menu-item px-3">
-                                                        <a href="{{ route('orders.show', $order->id) }}"
+                                                        <a href="{{ route('orders.edit', $order->id) }}"
                                                             class="menu-link px-3">@lang('actions.show')</a>
                                                     </div>
                                                     <!--end::Menu item-->

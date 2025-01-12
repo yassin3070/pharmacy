@@ -49,6 +49,7 @@ Route::group(['middleware' => ['api-cors', 'json.response', 'lang']], function (
     // Authenticated Routes
     Route::group(['middleware' => ['auth:sanctum']], function () {
 
+
         //User Routes
         Route::get('category-products', [HomeController::class, 'categoryProducts']);
 
@@ -57,13 +58,14 @@ Route::group(['middleware' => ['api-cors', 'json.response', 'lang']], function (
 
         /***************************** Orders Start *****************************/
 
+        Route::get('orders', [OrderController::class, 'myOrders']);
+        Route::get('get-order/{id}', [OrderController::class, 'getOrder']);
         Route::get('get-cart', [OrderController::class, 'getCart']);
         Route::post('add-to-cart', [OrderController::class, 'addToCart']);
-        Route::post('add-item', [OrderController::class, 'addItem']);
         Route::post('remove-item', [OrderController::class, 'removeItemFromOrder']);
         Route::post('clear-cart', [OrderController::class, 'clearCart']);
         Route::post('proceed-order', [OrderController::class, 'proceedOrder']);
-        Route::post('update-order-status', [OrderController::class, 'updateOrderStatus']);
+        Route::post('upload-item-recipe/{order_item_id}', [OrderController::class, 'uploadItemRecipe']);
         /***************************** Orders End *****************************/
 
 

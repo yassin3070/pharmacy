@@ -23,7 +23,7 @@ class OrderController extends Controller
         $this->orderRepository = $orderRepository;
         $this->Iuser = $Iuser;
         $this->Icat = $Icat;
-       
+
     }
 
 
@@ -53,7 +53,7 @@ class OrderController extends Controller
         return view('dashboard.orders.edit' , compact('order' , 'users' , 'categories'));
     }
 
-    public function update(CreateUpdateOrderRequest $request , $id)
+    public function update(Request $request , $id)
     {
         $this->orderRepository->update($request->validated() , $id);
         return response()->json();
@@ -68,7 +68,7 @@ class OrderController extends Controller
     }
 
 
-    
+
     public function show($id)
     {
         $order = $this->orderRepository->findOne($id);

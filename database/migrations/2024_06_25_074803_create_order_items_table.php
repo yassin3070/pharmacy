@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreignId('product_id')->nullable()->constrained()->nullOnDelete();
             $table->string('recipe')->nullable();
             $table->boolean('need_recipe')->default(false);
-            $table->boolean('recipe_status')->default(false);
+            $table->string('recipe_status')->nullable();
             $table->float('price', 8, 2)->default(0);
             $table->float('total', 8, 2)->default(0);
             $table->integer('quantity')->default(1);

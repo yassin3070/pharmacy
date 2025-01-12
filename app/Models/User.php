@@ -335,7 +335,7 @@ class User extends Authenticatable
 
     public function orders()
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(Order::class)->where('status','!=',Order::STATUSES['in_cart'])->get();
     }
 
     public function joinedRooms()

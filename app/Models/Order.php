@@ -11,11 +11,12 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = ['user_id' , 'title' , 'desc' , 'payment_type','category_id',
-                           'status' , 'provider_id' , 'cost' , 'order_num'];
+                           'status' , 'provider_id' , 'cost' , 'order_num','address_id'];
 
 
     const STATUSES = [
         'in_cart'                 => 'in_cart',
+        'pending'                 => 'pending',
         'preparing'               => 'preparing',
         'prepared'                => 'prepared',
         'on_the_way'                => 'on_the_way',
@@ -74,9 +75,13 @@ class Order extends Model
 
     public function items()
     {
-        return $this->hasMany(OrderItem::class , 'order_id');
+        return $this->hasMany(OrderItem::class );
     }
 
+    public function address()
+    {
+        return $this->belongsTo(Address::class , 'address_id');
+    }
 
     public function getStatusNameAttribute() {
         switch ($this->status) {

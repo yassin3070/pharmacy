@@ -19,7 +19,7 @@ class UpdateProfileRequest extends FormRequest
             'last_name'   => 'sometimes|max:255',
             'phone'       => [
                 'sometimes',
-                'phone_number',
+//                'phone_number',
                 Rule::unique('users', 'phone')->ignore($userId),
             ],
             'image'       => 'sometimes|image',

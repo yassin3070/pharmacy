@@ -50,20 +50,23 @@ class OrderService
     {
         return DB::transaction(function () use ($orderData) {
             // if address_id is null create a new address
-            if (empty($orderData['address_id']) && !empty($orderData['latitude']) && !empty($orderData['longitude'])) {
-                $address                 = User::find($orderData['user_id'])->addresses()->create(['latitude' => $orderData['latitude'], 'longitude' => $orderData['longitude']]);
-                $orderData['address_id'] = $address->id;
-            }
+//            if (empty($orderData['address_id']) && !empty($orderData['latitude']) && !empty($orderData['longitude'])) {
+//                $address                 = User::find($orderData['user_id'])->addresses()->create(['latitude' => $orderData['latitude'], 'longitude' => $orderData['longitude']]);
+//                $orderData['address_id'] = $address->id;
+//            }
 
             /** @var Order $order */
             $order = $this->orderRepository->create($orderData);
-
+            $product = Product::findOrFail($orderData['product_id']);
+            $total = $product->price * $orderData['quantity'];
             $order->items()->create($orderData + [
                     'status'   => OrderItem::STATUSES['in_cart'],
                     'order_id' => $order->id,
+                    'price'    =>$product->price ,
+                    'total'    => $total
                 ]);
 
-//            $this->updateOrderCalculations($order);
+            $this->updateOrderCalculations($order);
 
 
             return $order;
@@ -86,7 +89,7 @@ class OrderService
             $order = $this->updateOrder($orderId, $orderData);
             $this->updateOrderCalculations($order);
 
-            $order->items()->update(['status' => OrderItem::STATUSES['new']]);
+//            $order->items()->update(['status' => OrderItem::STATUSES['new']]);
 
 
             return $order;
@@ -102,21 +105,11 @@ class OrderService
     {
         return DB::transaction(function () use ($order) {
 
-            $order->load('items', 'coupon');
-
-            $this->updateOrderItemsCalculations($order);
 
             $productsPrice = $order->items->sum('total');
 
-
-            $shippingPrice = 0;
-            $discount      = 0;
-            $fittingPrice  = 0;
-
-//
-
             $order->update([
-                'total'          => $productsPrice + $shippingPrice  + $fittingPrice - $discount,
+                'total'          => $productsPrice ,
             ]);
 
         });
@@ -198,6 +191,7 @@ class OrderService
             }
             $itemData['total'] = $itemData['quantity'] * $product->price;
             $itemData['price'] = $product->price;
+            $itemData['order_id'] = $orderId;
             /** @var Order $order */
             $order = $this->orderRepository->findOne($orderId);
 
@@ -205,7 +199,7 @@ class OrderService
 
             $orderItem = $order->items()->updateOrCreate($itemBasicData, $itemData);
 
-//            $this->updateOrderCalculations($order);
+            $this->updateOrderCalculations($order);
 
             return $order;
         });
@@ -266,28 +260,6 @@ class OrderService
         $order->save();
     }
 
-    protected function updateOrderItemsCalculations(Order $order): void
-    {
-        $items = $order->items->load('branchService', 'branchCloth', 'branchCollar', 'branchCollarButton', 'branchCufflink',
-            'branchEmbroideryType', 'branchFPocketShape', 'branchSleeveShape');
-
-        foreach ($items as $item) {
-            $servicePrice        = $item->branchService?->price;
-            $clothPrice          = $item->branchCloth?->cloth_price;
-            $clothColorPrice     = $item->branchClothColor?->price;
-//            $clothPrice          = $item->branchCloth?->cloth_price + $item->branchCloth?->color_price;
-            $collarPrice         = $item->branchCollar?->price;
-            $collarButtonPrice   = $item->branchCollarButton?->price;
-            $cufflinkPrice       = $item->branchCufflink?->price;
-            $embroideryTypePrice = $item->branchEmbroideryType?->price;
-            $fPocketShapePrice   = $item->branchFPocketShape?->price;
-            $sleeveShapePrice    = $item->branchSleeveShape?->price;
-
-            $item->price = $servicePrice + $clothPrice + $clothColorPrice + $collarPrice + $collarButtonPrice + $cufflinkPrice + $embroideryTypePrice + $fPocketShapePrice + $sleeveShapePrice;
-            $item->total = $item->price * $item->quantity;
-            $item->save();
-        }
-    }
 
     public function measurementOrderCompleted(Order $order, MeasurementOrder $measurementOrder): void
     {

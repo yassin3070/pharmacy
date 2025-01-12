@@ -17,6 +17,7 @@ class Rate extends Model
         'comment',
         'user_id',
         'product_id',
+        'order_id',
         'is_approved',
         'rateable_id',
         'rateable_type',
@@ -40,6 +41,10 @@ class Rate extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class, 'order_id');
     }
 
     public function scopeApproved($query)

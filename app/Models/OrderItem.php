@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
+use App\Traits\UploadTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Support\Facades\Storage;
 use Str;
 
 class OrderItem extends Model
 {
-    use HasFactory;
+    use HasFactory ,UploadTrait;
 
+    const IMAGEPATH = 'order_items';
     const STATUSES = [
         'in_cart'                 => 'in_cart',
         'preparing'               => 'preparing',
@@ -19,6 +22,12 @@ class OrderItem extends Model
         'on_the_way'                => 'on_the_way',
         'delivered'               => 'delivered',
         'canceled'                => 'canceled',
+    ];
+
+    const RECIPE_STATUS = [
+        'pending'   => 'pending',
+        'accepted'  => 'accepted',
+        'rejected'  => 'rejected',
     ];
 
     protected $fillable = [
@@ -82,6 +91,22 @@ class OrderItem extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
 
+    public function setRecipeAttribute($value)
+    {
+        if($value){
+            return $this->attributes['recipe'] = $this->StoreFile(static::IMAGEPATH, $value);
+        }
+    }
+
+    public function getRecipeAttribute($value)
+    {
+        if($value)
+            return Storage::disk(env('FILESYSTEM_DRIVER'))->url($value);
+    }
 
 }

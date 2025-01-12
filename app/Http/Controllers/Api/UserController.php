@@ -19,7 +19,7 @@ class UserController extends Controller
 
     /**
      * Retrieve the authenticated user's profile.
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getProfile(Request $request)
@@ -47,7 +47,7 @@ class UserController extends Controller
             $user = auth()->user();
             $user->update($request->validated());
 
-            return $this->ApiResponse(['user' => $user->refresh()], __('apis.updated'), 200);
+            return $this->ApiResponse(['user' => new UserResource($user->refresh())], __('apis.updated'), 200);
         } catch (\Exception $e) {
             return $this->ApiResponse(null, __('apis.error_occurred'), 500, $e->getMessage());
         }
@@ -76,7 +76,7 @@ class UserController extends Controller
 
     /**
      * Toggle notification status for the authenticated user.
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function switchNotificationStatus()
@@ -93,7 +93,7 @@ class UserController extends Controller
 
     /**
      * Retrieve user types for the application.
-     * 
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function userTypes()
@@ -110,7 +110,7 @@ class UserController extends Controller
     public function sendContactMessage(ContactRequest $request)
     {
         try {
-         
+
             $contact = Contact::create([
                 'user_id' => \Auth::user()->id,
                 'name' => $request->name,

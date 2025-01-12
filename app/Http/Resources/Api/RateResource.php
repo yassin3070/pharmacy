@@ -20,6 +20,7 @@ class RateResource extends JsonResource
             'comment'  => $this->comment,
             'user'     => new UserResource($this->user),
             'product_id' => new ProductResource($this->product),
+            'order_id' => new OrderResource($this->order),
         ];
     }
 }

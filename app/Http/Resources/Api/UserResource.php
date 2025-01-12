@@ -12,7 +12,7 @@ class UserResource extends JsonResource
       $this->token = $value;
       return $this;
     }
-  
+
     public function toArray($request) {
       return [
         'id'                      => $this->id,
@@ -25,9 +25,9 @@ class UserResource extends JsonResource
         'lang'                    => $this->lang,
         'is_notify'               => $this->is_notify,
         'token'                   => $this->token,
-        'is_phone_verified'       => $this->is_phone_verified ? true : false,
-        'is_email_verified'       => $this->is_email_verified ? true : false,
-        'user_type'           => new UserTypeResource($this->userType),
+//        'is_phone_verified'       => $this->is_phone_verified ? true : false,
+//        'is_email_verified'       => $this->is_email_verified ? true : false,
+//        'user_type'           => new UserTypeResource($this->userType),
       ];
     }
 }
